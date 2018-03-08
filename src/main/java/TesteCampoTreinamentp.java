@@ -95,4 +95,23 @@ public class TesteCampoTreinamentp {
 		
 		driver.quit();
 	}
+	
+	@Test
+	public void deveVerificarValoresComboFalha() {
+		driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+		WebElement element3 = driver.findElement(By.id("elementosForm:escolaridade"));
+		Select combo = new Select(element3);
+		List<WebElement> options = combo.getOptions();
+		Assert.assertEquals(8, options.size());
+		
+		boolean encontrou = false;
+		for(WebElement option:options) {
+			if(option.getText().equals("Superior123")) {
+				encontrou = true;
+				break;
+			}
+		}
+		Assert.assertTrue(encontrou);
+		driver.quit();
+	}
 }
