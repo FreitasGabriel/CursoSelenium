@@ -1,7 +1,7 @@
 import java.util.List;
 
 import org.junit.Assert;
-//import org.junit.Ignore;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -133,6 +133,32 @@ public class TesteCampoTreinamentp {
 			}
 		}
 		Assert.assertTrue(encontrado);
+		driver.quit();
+	}
+	
+	@Test
+	public void deveMudarBotao() {
+		driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+		WebElement botao = driver.findElement(By.id("buttonSimple"));
+		botao.click();
+		
+		Assert.assertEquals("Obrigado!", botao.getAttribute("value"));
+		driver.quit();
+	}
+	
+	@Test
+	@Ignore
+	public void deveInteragirComLink() {
+		driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+		driver.findElement(By.linkText("Voltar")).click();
+	}
+	
+	@Test
+	public void deveInteragirComTexto() {
+		driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+		Assert.assertTrue(driver.findElement(By.tagName("body"))
+				.getText().contains("Campo de Treinamento"));
+		
 		driver.quit();
 	}
 	

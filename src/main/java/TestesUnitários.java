@@ -54,7 +54,7 @@ public class TestesUnitários {
 	public void testeCheckBox() {
 		driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 		driver.findElement(By.id("elementosForm:comidaFavorita:2")).click();
-		driver.findElement(By.id("elementsoForm:comidaFavorita:2")).isSelected();
+		driver.findElement(By.id("elementosForm:comidaFavorita:2")).isSelected();
 		Assert.assertTrue(driver.findElement(By.id("elementosForm:comidaFavorita:2")).isSelected());
 		
 		driver.quit();
@@ -71,4 +71,32 @@ public class TestesUnitários {
 		
 		driver.quit();
 	}
+	
+	@Test
+	public void deveVerificarValoresCombo() {
+		driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+		WebElement element = driver.findElement(By.id("elementosForm:escolaridade"));
+		Select combo = new Select(element);
+		List<WebElement> options = combo.getOptions();
+		
+		boolean encontrou = false;
+		for(WebElement option:options) {
+			if(option.getText().equals("Mestrado")) {
+				encontrou = true;
+				break;
+			}
+		}
+		Assert.assertTrue(encontrou);
+		driver.quit();
+	}
+	
+	@Test
+	public void MudarBotao() {
+		driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+		WebElement botao = driver.findElement(By.id("buttonSimple"));
+		botao.click();
+		
+		Assert.assertEquals("Obrigado!", botao.getAttribute("value"));
+		driver.quit();
+				}
 }
