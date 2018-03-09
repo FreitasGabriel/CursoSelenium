@@ -1,7 +1,7 @@
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Ignore;
+//import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -77,7 +77,7 @@ public class TesteCampoTreinamentp {
 	}
 	
 	@Test
-	public void deveVerificarValoresCombo() {
+	public void deveVerificarValoresComboBox() {
 		driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 		WebElement element2 = driver.findElement(By.id("elementosForm:escolaridade"));
 		Select combo = new Select(element2);
@@ -97,7 +97,7 @@ public class TesteCampoTreinamentp {
 	}
 	
 	@Test
-	public void deveVerificarValoresComboFalha() {
+	public void deveVerificarValoresComboBoxFalha() {
 		driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 		WebElement element3 = driver.findElement(By.id("elementosForm:escolaridade"));
 		Select combo = new Select(element3);
@@ -106,7 +106,7 @@ public class TesteCampoTreinamentp {
 		
 		boolean encontrou = false;
 		for(WebElement option:options) {
-			if(option.getText().equals("Superior123")) {
+			if(option.getText().equals("Superior")) {
 				encontrou = true;
 				break;
 			}
@@ -114,4 +114,26 @@ public class TesteCampoTreinamentp {
 		Assert.assertTrue(encontrou);
 		driver.quit();
 	}
+	
+	@Test
+	public void deveVerificarValoresComboBoxMultiplo() {
+		driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+		WebElement element = driver.findElement(By.id("elementosForm:esportes"));
+		Select combo = new Select(element);
+		combo.selectByVisibleText("Natacao");
+		combo.selectByVisibleText("Corrida");
+		combo.selectByVisibleText("Karate");
+		List<WebElement> options = combo.getAllSelectedOptions();
+		
+		boolean encontrado = false;
+		for(WebElement option:options) {
+			if(option.getText().equals("Natacao")) {
+				encontrado = true;
+				break;
+			}
+		}
+		Assert.assertTrue(encontrado);
+		driver.quit();
+	}
+	
 }
