@@ -1,52 +1,57 @@
+import java.io.File;
+import java.io.IOException;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.gargoylesoftware.htmlunit.javascript.host.Proxy;
-
-import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.client.ClientUtil;
 import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.proxy.CaptureType;
+import net.lightbody.bmp.util.BrowserMobHttpUtil;
+
 
 public class TesteLP {
 	
 	@Test
-	public void testSignature() {
+	public void testSignature() throws Exception {
 		
-		BrowserMobProxy proxy = new BrowserMobProxyServer();
-	    proxy.start(0);
-	    // get the JVM-assigned port and get to work!
-	    int port = proxy.getPort();
-
-	    // get the Selenium proxy object
-	    org.openqa.selenium.Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
-
-	    // configure it as a desired capability
-	    DesiredCapabilities capabilities = new DesiredCapabilities();
-	    capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
-
-	    // start the browser up
-	    WebDriver driver = new ChromeDriver(capabilities);
-
-	    // enable more detailed HAR capture, if desired (see CaptureType for the complete list)
-	    proxy.enableHarCaptureTypes(CaptureType.REQUEST_CONTENT, CaptureType.RESPONSE_CONTENT);
-
-	    // get the HAR data
-	    Har har = proxy.getHar();
+		BrowserMobProxyServer proxyServer = new BrowserMobProxyServer();
+		proxyServer.start();
+		proxyServer.setHarCaptureTypes(CaptureType.getAllContentCaptureTypes());
+		proxyServer.enableHarCaptureTypes(CaptureType.REQUEST_CONTENT, CaptureType.RESPONSE_CONTENT);
+		Proxy proxy = ClientUtil.createSeleniumProxy(proxyServer);
+		FirefoxProfile profile = new FirefoxProfile();
+		DesiredCapabilities cap = new DesiredCapabilities();
+		cap.setAcceptInsecureCerts(true);
+		String host = proxy.getHttpProxy().split(":")[0];
+		int port = Integer.parseInt(proxy.getHttpProxy().split(":")[1]);
 		
-		driver.get("http://portalrecarga.vivo.com.br/lp/descontosnc1");
-		driver.findElement(By.className("btn")).click();
-		driver.findElement(By.className("btn")).isSelected();
+		profile.setPreference("network.proxy.type", 1);
+		profile.setPreference("network.proxy.http", host);
+		profile.setPreference("network.proxy.http_port", port);
+		profile.setPreference("netqork.proxy.ssl", host);
+		profile.setPreference("network.proxy.ssl_port", port);
 		
-		Assert.assertEquals("Parabéns!", driver.findElement(By.tagName("h2")).getText());
+		profile.setPreference("acceptInseruceCerts", true);
+		cap.setCapability(FirefoxDriver.PROFILE, profile);
+		FirefoxDriver driver = new FirefoxDriver(cap);		
+
+		
+		proxyServer.newHar("mysite");
+		driver.get("http://www.google.com");
+		driver.findElement(By.id("lst-ib")).sendKeys("Teste");
+		driver.findElement(By.name("btnK")).click();
+
 		
 	}
+		
+
 }
