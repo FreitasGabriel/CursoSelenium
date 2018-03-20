@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -10,12 +12,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.http.HttpRequest;
 
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.client.ClientUtil;
 import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.proxy.CaptureType;
-import net.lightbody.bmp.util.BrowserMobHttpUtil;
+
 
 
 public class TesteLP {
@@ -42,9 +45,12 @@ public class TesteLP {
 		
 		profile.setPreference("acceptInseruceCerts", true);
 		cap.setCapability(FirefoxDriver.PROFILE, profile);
-		FirefoxDriver driver = new FirefoxDriver(cap);		
-
+		FirefoxDriver driver = new FirefoxDriver(cap);
 		
+		BrowserMobHttpRequest request = new BrowserMobHttpRequest();
+
+
+		request.getMethod().addRequestHeader("msisdn", "5521999999999");
 		proxyServer.newHar("mysite");
 		driver.get("http://www.google.com");
 		driver.findElement(By.id("lst-ib")).sendKeys("Teste");
@@ -52,6 +58,5 @@ public class TesteLP {
 
 		
 	}
-		
 
 }
